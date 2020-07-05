@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import HelloWorld from '@/components/HelloWorld'
+// 导入登录组件
 import Login from 'components/Login'
 // 导入Home组件
 import Home from 'components/Home'
@@ -26,15 +26,15 @@ const router = new Router({
 
 // 导航守卫判断是否登录
 router.beforeEach((to, from, next) => {
-  if (to.path === '/login') {
-    next()
+  if (to.path === '/login') { // 如果是要跳转到登录路由的时候
+    next() // 直接跳过
     return false
   }
   let token = localStorage.getItem('token')
-  if (token) {
+  if (token) { // 如果token存在，表示已经登录了
     next()
   } else {
-    next('/login')
+    next('/login') // 跳转到登录路由
   }
 })
 
