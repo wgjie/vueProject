@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form ref="form" :model="form" label-width="80px" :rules="rules">
-      <img src="../assets/logo.png" alt="">
+      <img src="@/assets/touxiang.jpg" alt="">
       <el-form-item label="用户名" prop="username">
         <el-input v-model="form.username" placeholder="请输入用户名"></el-input>
       </el-form-item>
@@ -92,6 +92,9 @@ export default {
   position: relative;
 }
 .el-form img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
