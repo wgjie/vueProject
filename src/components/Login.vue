@@ -18,7 +18,7 @@
 
 <script>
 // 导入axios
-// import axios from 'axios'
+import axios from 'axios'
 
 export default {
   data() {
@@ -43,22 +43,28 @@ export default {
     onSubmit() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          // axios({
-          //   url: '',
-          //   method: 'post',
-          //   data: this.form
-          // }).then(function(res) {
-          //   if (res.data.meta.status === 200) {
-          //     this.$message.success('登录成功')
-          //     this.$message({
-          //       message: '恭喜你,登录成功了',
-          //       type: 'success'
-          //     })
-          //     this.$router.push('/home')
-          //   } else {
-          //     this.$message.error(res.data.meta.msg)
-          //   }
-          // })
+          axios({
+            url: 'http://localhost:8888/api/private/v1/login',
+            method: 'post',
+            data: this.form
+          }).then(res => {
+            if (res.data.meta.status === 200) {
+              this.$message({
+                message: res.data.meta.msg,
+                type: 'success',
+                duration: 1500
+              })
+              // 将token存储到本地存储
+              localStorage.setItem('token', res.data.data.token)
+              this.$router.push('/home')
+            } else {
+              this.$message({
+                message: res.data.meta.msg,
+                type: 'error',
+                duration: 1500
+              })
+            }
+          })
         } else {
           return false
         }
