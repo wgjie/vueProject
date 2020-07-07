@@ -24,6 +24,7 @@
               el-menu-item-group：菜单项分组
                 el-menu-item：菜单项
           unique-opened：是否只打开一个菜单
+          router：是否开启路由模式
         -->
         <el-menu
           default-active="1-1"
@@ -32,13 +33,14 @@
           text-color="#fff"
           active-text-color="#ffd04b"
           unique-opened
+          router
         >
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>用户管理</span>
             </template>
-            <el-menu-item index="1-1" >
+            <el-menu-item index="/users" >
               <i class="el-icon-document"></i>
               <span slot="title">用户列表</span>
             </el-menu-item>
@@ -59,7 +61,9 @@
           </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view/>
+      </el-main>
     </el-container>
   </el-container>
 </template>
