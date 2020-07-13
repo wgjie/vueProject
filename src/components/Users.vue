@@ -149,8 +149,9 @@ export default {
     }
   },
   methods: {
-    getUserList() {
-      this.axios({
+    // 获取用户列表
+    async getUserList() {
+      let res = await this.axios({
         url: 'users',
         method: 'get',
         params: {
@@ -158,82 +159,82 @@ export default {
           pagenum: this.currentPage,
           pagesize: this.pageSize
         }
-      }).then(res => {
-        if (res.meta.status === 200) {
-          this.userInfo = res.data.users
-          this.total = res.data.total
-        }
       })
+      if (res.meta.status === 200) {
+        this.userInfo = res.data.users
+        this.total = res.data.total
+      }
     },
+    // 改变每页的条数
     handleSizeChange(val) {
       this.pageSize = val
       this.getUserList()
     },
+    // 改变了当前页
     handleCurrentChange(val) {
       this.currentPage = val
       this.getUserList()
     },
-    delUser(id) {
-      this.$confirm('你确定要删除吗？', '温馨提示', {
-        type: 'warning'
-      }).then(() => {
-        this.axios({
+    // 删除用户
+    async delUser(id) {
+      try {
+        await this.$confirm('你确定要删除吗？', '温馨提示', {
+          type: 'warning'
+        })
+        let res = await this.axios({
           url: `users/${id}`,
           method: 'delete'
-        }).then(res => {
-          if (res.meta.status === 200) {
-            if (this.userInfo.length <= 1 && this.currentPage > 1) {
-              this.currentPage--
-            }
-            this.getUserList()
-            this.$message.success('删除成功')
-          }
         })
-      }).catch(() => {
+        if (res.meta.status === 200) {
+          if (this.userInfo.length <= 1 && this.currentPage > 1) {
+            this.currentPage--
+          }
+          this.getUserList()
+          this.$message.success('删除成功')
+        }
+      } catch (e) {
         this.$message.info('取消删除了')
-      })
+      }
     },
     // 搜索按钮
     search() {
       this.currentPage = 1
       this.getUserList()
     },
-    // 用户修改
-    changeUserState(user) {
-      this.axios({
+    // 状态修改
+    async changeUserState(user) {
+      let res = await this.axios({
         method: 'put',
         url: `users/${user.id}/state/${user.mg_state}`
-      }).then(res => {
-        if (res.meta.status === 200) {
-          this.$message.success('修改成功')
-        } else {
-          this.$message.error('修改失败')
-        }
       })
+      if (res.meta.status === 200) {
+        this.$message.success('修改成功')
+      } else {
+        this.$message.error('修改失败')
+      }
     },
     // 处理添加
     handleAddUser() {
-      this.$refs.addForm.validate(valid => {
+      this.$refs.addForm.validate(async valid => {
         if (!valid) return false
         // 发送请求
-        this.axios({
+        let res = await this.axios({
           method: 'post',
           url: 'users',
           data: this.addForm
-        }).then(res => {
-          if (res.meta.status === 201) {
-            // 重置样式
-            this.$refs.addForm.resetFields()
-            // 关闭模态框
-            this.addDialogVisible = false
-            this.$message.success('添加成功')
-            // 重新渲染
-            this.currentPage = Math.ceil((this.total + 1) / this.pageSize)
-            this.getUserList()
-          } else {
-            this.$message.error(res.meta.msg)
-          }
         })
+        if (res.meta.status === 201) {
+          // 重置样式
+          this.$refs.addForm.resetFields()
+          // 关闭模态框
+          this.addDialogVisible = false
+          this.$message.success('添加成功')
+          // 重新渲染
+          this.currentPage = Math.ceil((this.total + 1) / this.pageSize)
+          this.getUserList()
+        } else {
+          this.$message.error(res.meta.msg)
+        }
       })
     },
     // 显示修改对话框
@@ -247,22 +248,21 @@ export default {
     },
     // 处理修改
     handleEditUser() {
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate(async valid => {
         if (!valid) return false
-        this.axios({
+        let res = await this.axios({
           method: 'put',
           data: this.editForm,
           url: `users/${this.editForm.id}`
-        }).then(res => {
-          if (res.meta.status === 200) {
-            this.$refs.editForm.resetFields()
-            this.editDialogVisible = false
-            this.$message.success('修改成功')
-            this.getUserList()
-          } else {
-            this.$message.error('服务器异常')
-          }
         })
+        if (res.meta.status === 200) {
+          this.$refs.editForm.resetFields()
+          this.editDialogVisible = false
+          this.$message.success('修改成功')
+          this.getUserList()
+        } else {
+          this.$message.error('服务器异常')
+        }
       })
     }
   },

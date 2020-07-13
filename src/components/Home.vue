@@ -71,26 +71,25 @@
 <script>
 export default {
   methods: {
-    logout() {
-      this.$confirm('此操作将退出登录, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          localStorage.removeItem('token')
-          this.$message({
-            type: 'success',
-            message: '退出成功!'
-          })
-          this.$router.push('/login')
+    async logout() {
+      try {
+        await this.$confirm('此操作将退出登录, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         })
-        .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消退出'
-          })
+        localStorage.removeItem('token')
+        this.$message({
+          type: 'success',
+          message: '退出成功!'
         })
+        this.$router.push('/login')
+      } catch (e) {
+        this.$message({
+          type: 'info',
+          message: '已取消退出'
+        })
+      }
     }
   }
 }

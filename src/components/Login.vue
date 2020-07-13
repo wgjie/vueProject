@@ -38,32 +38,28 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$refs.form.validate(valid => {
-        if (valid) {
-          this.axios({
-            url: 'login',
-            method: 'post',
-            data: this.form
-          }).then(res => {
-            if (res.meta.status === 200) {
-              this.$message({
-                message: res.meta.msg,
-                type: 'success',
-                duration: 1500
-              })
-              // 将token存储到本地存储
-              localStorage.setItem('token', res.data.token)
-              this.$router.push('/home')
-            } else {
-              this.$message({
-                message: res.meta.msg,
-                type: 'error',
-                duration: 1500
-              })
-            }
+      this.$refs.form.validate(async valid => {
+        if (!valid) return false
+        let res = await this.axios({
+          url: 'login',
+          method: 'post',
+          data: this.form
+        })
+        if (res.meta.status === 200) {
+          this.$message({
+            message: res.meta.msg,
+            type: 'success',
+            duration: 1500
           })
+          // 将token存储到本地存储
+          localStorage.setItem('token', res.data.token)
+          this.$router.push('/home')
         } else {
-          return false
+          this.$message({
+            message: res.meta.msg,
+            type: 'error',
+            duration: 1500
+          })
         }
       })
     },
