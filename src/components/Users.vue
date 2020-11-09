@@ -288,4 +288,9 @@ export default {
 .el-input {
   width: 300px;
 }
+.el-form {
+  width: 400px;
+  background-color: #fff;
+  position: relative;
+}
 </style>
